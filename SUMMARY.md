@@ -36,4 +36,14 @@ bui# Summary
   * [5.2 使用 Classworlds API](plexus/ch5.md#2)
 
 
+### [第二部分 sisu.plexus]
+* [第1章 org.eclipse.sisu.plexus 项目](sisu.plexus/sisu-plexus-1.md)
+  * [1.1 sisu.plexus IOC 容器初体验](sisu.plexus/sisu-plexus-1.md#1)
+
+
+
+
+
+
+
 

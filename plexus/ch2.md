@@ -481,6 +481,9 @@ PlexusContainer 接口定义了 Plexus 容器最核心的功能，可以将它�
 MutablePlexusContainer 是 PlexusContainer 的子接口，并增加了改变容器配置的功能。接口定义如下：
 
 ```java
+
+package org.codehaus.plexus;
+
 public interface MutablePlexusContainer
     extends PlexusContainer
 {
@@ -535,6 +538,8 @@ MutablePlexusContainer 接口定义的功能就是对 Plexus 容器的几个重�
 LogEnabled 接口非常简单，只有一个方法，如下所示：
 
 ```java
+
+package org.codehaus.plexus.logging;
 
 public interface LogEnabled
 {
@@ -664,7 +669,7 @@ DefaultPlexusContainer 提供了两个构造器：
 
 创建 DefaultPlexusContainer 容器实例，需要一个 ContainerConfiguration 实例，通过该实例完成容器的初始化。容器并没有一直持有 PlexusConfiguration 实例，初始化结束之后，该实例在容器中就不存在了。
 
-PlexusConfiguration 由 DefaultContainerConfiguration 提供默认的实现。其中提供了为容器配置内部组件的设置和获取信息的方法，与 MutablePlexusContainer 接口中新增的单个配置功能差不多。PlexusConfiguration 一次性配置容器内所有组件，而 MutablePlexusContainer 接口中新增的方法可以进行单项配置。默认的 DefaultContainerConfiguration 实现提供了容器的默认配置信息，参见《第3章 Plexus IOC 容器配置接口及其默认实现》的阐述。容器的初始化过程由 DefaultPlexusContainer 内部的 `construct( ContainerConfiguration c )` 方法完成，如下代码清单所示：
+PlexusConfiguration 由 DefaultContainerConfiguration 提供默认的实现。其中提供了为容器配置内部组件的设置和获取信息的方法，与 MutablePlexusContainer 接口中新增的单个配置功能差不多。PlexusConfiguration 一次性配置容器内所有组件，而 MutablePlexusContainer 接口中新增的方法可以进行单项配置。默认的 DefaultContainerConfiguration 实现提供了容器的默认配置信息，参见《第5章 Plexus IOC 容器配置接口及其默认实现》的阐述。容器的初始化过程由 DefaultPlexusContainer 内部的 `construct( ContainerConfiguration c )` 方法完成，如下代码清单所示：
 
 ```java
 
