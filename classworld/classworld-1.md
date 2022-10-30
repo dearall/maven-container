@@ -1,4 +1,4 @@
-## 第5章 Plexus Classworld 项目 ##
+## 第1章 Plexus Classworld 项目 ##
 
 Plexus Classworlds 是一个为需要对 Java 的类加载器（ClassLoader）进行复杂操作的容器开发者提供的框架。Java 自带的类加载器机制和类，对某些类型的应用开发者来说，可能带来麻烦和混乱。动态加载组件或其它表现为 “容器（container）” 的项目，可以从 Classworlds 提供的类加载控制获得益处。
 
@@ -19,7 +19,7 @@ Realm 中文的意思是 “领域，范围，王国，地带”。这里可以�
 <br/><br/>
 <a id="1"></a>
 
-## 5.1 Classworld API 详解 ##
+## 1.1 Classworld API 详解 ##
 
 plexus-classworlds 是一个很小的项目模块，其中包含的主要的 API 类如下：
 
@@ -33,16 +33,65 @@ plexus-classworlds 是一个很小的项目模块，其中包含的主要的 API
 <br/><br/>
 <a id="11"></a>
 
-## 5.1.1 ClassRealm 类 ##
+## 1.1.1 ClassRealm 类 ##
 
 
-ClassRealm 继承自 java.net.URLClassLoader 类，是 Classworld 定义的类加载器，是类的加载工具（gateway）。每一个 ClassRealm 类加载器都可以访问基本类加载器（base class loader），导入形式的 0 个或多个类加载器，可选的上级类加载器（parent class loader），以及自己的类路径。在查找一个类或者资源时，ClassRealm 总是先从基本类加载器开始查找，如果没有找到，则委托给其内部的策略 Strategy 实例按既定的顺序查找。ClassRealm 默认使用 SelfFirstStrategy 策略定义的顺序查找类或资源。它会按照这样的类加载顺序对一个类进行加载：从外部导入查找类加载器加载、自身加载器中查找已加载的类或通过全路径名加载、从上级类加载器（parent class loader）加载。按照这样顺序查找，一旦找到并加载了该类，就立即停止，不会继续后面的查找。基本类加载器（base class loader）假定其具有加载引导类（bootstrap class）的能力。
+ClassRealm 继承自 java.net.URLClassLoader 类，是 Classworld 定义的类加载器，是类的加载工具（gateway）。每一个 ClassRealm 类加载器都可以访问基本类加载器（base class loader），导入形式的 0 个或多个类加载器，可选的上级类加载器（parent class loader），以及自己的类路径。在查找一个类或者资源时，ClassRealm 总是先从基本类加载器开始查找，如果没有找到，则委托给其内部的策略 Strategy 实例按既定的顺序查找，使用 Strategy 查找类或资源的顺序，是 ClassRealm 与 Java 原生类加载器根本性区别所在。ClassRealm 默认使用 SelfFirstStrategy 策略定义的顺序查找类或资源。它会按照如下的类加载顺序对一个类进行加载：从外部导入查找类加载器加载、自身加载器中查找已加载的类或通过全路径名加载、从上级类加载器（parent class loader）加载。按照这样顺序查找，一旦找到并加载了该类，就立即停止，不会继续后面的查找。基本类加载器（base class loader）假定其具有加载引导类（bootstrap class）的能力。如下代码所示：
+
+```java
+
+public Class<?> loadClass( String name )
+    throws ClassNotFoundException
+{
+    Class<?> clazz = realm.loadClassFromImport( name );
+
+    if ( clazz == null )
+    {
+        clazz = realm.loadClassFromSelf( name );
+
+        if ( clazz == null )
+        {
+            clazz = realm.loadClassFromParent( name );
+
+            if ( clazz == null )
+            {
+                throw new ClassNotFoundException( name );
+            }
+        }
+    }
+
+    return clazz;
+}
+```
+
+加载资源时，按如下顺序查找：
+
+```java
+public URL getResource( String name )
+{
+    URL resource = realm.loadResourceFromImport( name );
+
+    if ( resource == null )
+    {
+        resource = realm.loadResourceFromSelf( name );
+
+        if ( resource == null )
+        {
+            resource = realm.loadResourceFromParent( name );
+        }
+    }
+
+    return resource;
+}
+```
+
+ClassRealm 类代码实现：
 
 ```java
 public class ClassRealm
     extends URLClassLoader
 {
-    // 内部由对外部 ClassWorld 容器的引用
+    // 内部有对外部 ClassWorld 容器的引用
     private ClassWorld world;
 
     // 构造器传递进来的一个 ClassRealm 标识，与 ClassWorld 中 `Map<String, ClassRealm>` 的 key 一致
@@ -108,12 +157,10 @@ public class ClassRealm
 
 ClassRealm 提供如下构造器：
 
-**ClassRealm(ClassWorld world, String id, ClassLoader baseClassLoader)**：创建新的 ClassRealm 实例。
-
-参数：
-&emsp;&emsp;*ClassWorld world*  ：类加载器集合 ClassWorld 对象，一定不能为 null 值。
-&emsp;&emsp;*String id*         ：这个类加载器 realm 的标识符，一定不能为 null 值。
-&emsp;&emsp;*ClassLoader baseClassLoader* ：本类加载器 realm 的基础类加载器，如果为 null 值，则使用引导类加载器（the bootstrap class loader）作为基本类加载器。
+- **ClassRealm(ClassWorld world, String id, ClassLoader baseClassLoader)**：创建新的 ClassRealm 实例<br />
+  *ClassWorld world* ：类加载器集合 ClassWorld 对象，一定不能为 null 值。<br />
+  *String id* ：这个类加载器 realm 的标识符，一定不能为 null 值。<br />
+  *ClassLoader baseClassLoader* ：基础类加载器，如果为 null 值，则使用引导类加载器（the bootstrap class loader）作为基本类加载器。
 
 
 <br/><br/>
@@ -128,7 +175,7 @@ ClassRealm 提供如下构造器：
 
 &emsp;**addURL(URL url)**：ClassRealm 重写了该方法，处理消除以 "jar:" 开头，并以 "!/" 结尾的 URL 字符，并调用父类 URLClassLoader.addURL(URL url) 方法，以向该类加载器添加要加载类的 URL，然后 ClassRealm 就可以从该 URL 指定的位置加载类了。
 
-&emsp;**importFrom(ClassLoader classLoader, String packageName)**：将 classLoader 类加载器对应的包 packageName，加入到本领域类加载器的外部导入集合中，形成对外部某个包及其对应的领域类加载器的链接关系。
+&emsp;**importFrom(ClassLoader classLoader, String packageName)**：将 classLoader 类加载器对应的包 packageName，加入到该领域类加载器的外部导入集合中，形成对外部某个包及其对应的领域类加载器的链接关系。
 
 &emsp;**importFrom( String realmId, String packageName )**：与上个方法类似，通过所提供的 realmId 在内部引用的 ClassWorld 集合中找到对应的类加载器，然后以找到的 classLoader 调用上面的方法。
 
@@ -137,10 +184,10 @@ ClassRealm 提供如下构造器：
 <br/><br/>
 <a id="12"></a>
 
-## 5.1.2 ClassWorld 类 ##
+## 1.1.2 ClassWorld 类 ##
 
 
-ClassWorld 是 ClassRealm 的集合，实现对 ClassRealm 的管理。其内部维护一个 `Map<String, ClassRealm> realms`，其中 key 为 String 型的 realmId，value 是 ClassRealm 实例。ClassRealm 要求内部必须维护包含的它的外部 ClassWorld 实例的引用，并且每个 ClassRealm 实例通过其内部的 id 来保证它在 ClassWorld 中的唯一性，称为 realmId。ClassWorld 类是线程安全的，其方法都进行了同步处理。
+ClassWorld 是 ClassRealm 的集合，实现对 ClassRealm 的管理。其内部维护一个 `Map<String, ClassRealm> realms`，其中 key 为 realmId，value 是 ClassRealm 实例。ClassRealm 要求内部必须维护包含它的 ClassWorld 实例的引用，并且每个 ClassRealm 实例通过其内部的 id 来保证它在 ClassWorld 中的唯一性，称为 realmId。ClassWorld 类是线程安全的，其方法都进行了同步处理。
 
 
 ClassWorld 部分代码如下所示：
@@ -170,13 +217,42 @@ public class ClassWorld
     {
         this.realms = new LinkedHashMap<String, ClassRealm>();
     }
+
+    
+    public ClassRealm newRealm( String id )
+        throws DuplicateRealmException
+    {
+        return newRealm( id, getClass().getClassLoader() );
+    }
+
+    public synchronized ClassRealm newRealm( String id, ClassLoader classLoader )
+        throws DuplicateRealmException
+    {
+        if ( realms.containsKey( id ) )
+        {
+            throw new DuplicateRealmException( this, id );
+        }
+
+        ClassRealm realm;
+
+        realm = new ClassRealm( this, id, classLoader );
+
+        realms.put( id, realm );
+
+        for ( ClassWorldListener listener : listeners )
+        {
+            listener.realmCreated( realm );
+        }
+
+        return realm;
+    }
 }
 ```
 
-ClassWorld 在内部除了维护 realmId 到 ClassRealm 实例的映射集合外，还维护着一个监听器链表 `List<ClassWorldListener> listeners`，可以通过如下方法管理 ClassWorld 监听器：
+ClassWorld 在内部除了维护 realmId 到 ClassRealm 实例的映射集合外，还维护一个监听器列表 `List<ClassWorldListener> listeners`，可以通过如下方法管理 ClassWorld 监听器：
 
-- **addListener(ClassWorldListener listener)** 
-- **removeListener(ClassWorldListener listener)**
+- **addListener(ClassWorldListener listener)** ：向 ClassWorld 添加监听器
+- **removeListener(ClassWorldListener listener)**：将监听器移出 ClassWorld 
 
 ClassWorldListener 监听器接口定义如下：
 
@@ -199,7 +275,7 @@ ClassWorld 在创建新 ClassRealm 和将 ClassRealm 移除 ClassWorld 管理时
 ClassWorld 提供两个构造器：
 
 - **ClassWorld()**：创建一个空的 ClassWorld 实例。
-- **ClassWorld(String realmId, ClassLoader classLoader)**：创建一个 ClassWorld 实例实例之后，再以 realmId 和 classLoader 参数创建一个 ClassRealm 类加载器，并把它加入到 realms 映射集合中。
+- **ClassWorld(String realmId, ClassLoader classLoader)**：创建一个 ClassWorld 实例之后，再以 realmId 和 classLoader 参数创建一个 ClassRealm 类加载器，并把它加入到 ClassWorld 实例进行管理。
 
 
 
@@ -210,7 +286,7 @@ ClassWorld 提供两个构造器：
 
 ClassWorld 对外提供如下方法：
 
-- **ClassRealm newRealm( String id, ClassLoader classLoader )**：以提供的 classLoader 作为新 ClassRealm 实例的基本加载器，并以 id 为标识符，创建新的 ClassRealm 实例，将实例加入到 ClassWorld 的管理中，最后触发所有监听器的 realmCreated( ClassRealm realm ) 方法。
+- **ClassRealm newRealm( String id, ClassLoader classLoader )**：以提供的 classLoader 作为新 ClassRealm 实例的基本加载器，并以 id 为标识符，创建新的 ClassRealm 实例，将实例加入到 ClassWorld 的管理中，并触发所有监听器的 realmCreated( ClassRealm realm ) 方法。
 - **ClassRealm 	newRealm(String id)**：以加载该 ClassWorld 的类加载器作为新 ClassRealm 实例的基本加载器，并以 id 为标识符，创建新的 ClassRealm 实例，将实例加入到 ClassWorld 的管理中，最后触发所有监听器的 realmCreated( ClassRealm realm ) 方法。
 - **disposeRealm(String id)**：将指定 id 的 ClassRealm 实例移除 ClassWorld 的管理，并触发所有监听器的 realmDisposed( ClassRealm realm ) 方法。
 - **ClassRealm getClassRealm( String id )**：如果在 `Map<String, ClassRealm> realms` 找到指定 id 的 ClassRealm 实例，返回该实例，否则返回 null 值。
@@ -224,7 +300,7 @@ ClassWorld 对外提供如下方法：
 <br/><br/>
 <a id="2"></a>
 
-## 5.2 使用 Classworlds API ##
+## 1.2 使用 Classworlds API ##
 
 Java API 可以用于创建新的 realm 类加载器，并通过具体包的导入将这些 realm 连接起来。
 
@@ -258,7 +334,7 @@ ClassWorld world = new ClassWorld();
                                   "com.werken.projectz.component" );
 ```
 
-代码将 "container" 对应的领域类加载器，即 containerRealm 及其对应的包 "com.werken.projectz.component" 加入到 logComponentRealm 领域类加载器内的 foreignImports 集合。这时，如果通过 `ClassRealm.loadClass( String name )` 方法加载某个全名的类，就会调用 `ClassRealm.loadClassFromImport( String name )` 方法，该方法首先在 foreignImports 集合中查找与所提供的类全名具有相同包名的领域类加载器，如果找到，就以该领域类加载器加载 name 所指定的类。
+代码将 "container" 对应的领域类加载器，即 containerRealm 及其对应的包 "com.werken.projectz.component" 加入到 logComponentRealm 领域类加载器内的 foreignImports 集合。这时，如果通过 `ClassRealm.loadClass( String name )` 方法加载某个全限定类名指定的类，就会调用 `ClassRealm.loadClassFromImport( String name )` 方法，该方法首先在 foreignImports 集合中查找与所提供的全限定类名具有相同包名的领域类加载器，如果找到，就以该领域类加载器加载 name 所指定的类。
 
 容器实现，可以由容器的领域类加载器加载容器类，然后使用加载完成的容器类：
 
