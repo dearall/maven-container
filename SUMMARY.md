@@ -63,7 +63,16 @@
 
 
 ## 第五部分 Google Guice
-* [第1章 Google Guice 概述 Overview](guice/guice-1.md)
+* [第1章 Google Guice 入门 Getting Started](guice/guice-1.md)
+  * [1.1 Google Guice 概述 Overview](guice/guice-1.md#1)
+  * [1.2 什么是依赖注入 What is dependency injection](guice/guice-1.md#2)
+  * [1.3 Guice 核心概念](guice/guice-1.md#3)
+* [第2章 Guice 的内部模型 Mental Model](guice/guice-2.md)
+  * [2.1 Guice 是一个 map](guice/guice-2.md#1)
+  * [2.2 使用 Guice](guice/guice-2.md#2)
+  * [2.3 依赖构成一个有向图 Dependencies form a graph](guice/guice-2.md#3)
+* [第3章 Guice 的生命范围 Scope](guice/guice-3.md)
+  * [3.1 内置的 scope（Built-in scopes）](guice/guice-3.md#1)
 
 
 

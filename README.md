@@ -19,6 +19,10 @@ Classword、Plexus CLI、Plexus Utils 都是比较小的工具项目，在 maven
 
 wagon 是另一个 maven 维护的开源项目，用于 maven 及其子项目中，用以执行网络操作相关的任务，主要是 http 下载工作。本文集也会给它一部分章节，阐释它的用法和内部机制。
 
+<br/><br/>
+
+作者：[devalone](devalone@126.com)
+<br/>
 
 文集位置：https://github.com/dearall/maven-container.git
 
