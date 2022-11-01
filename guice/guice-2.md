@@ -147,7 +147,7 @@ class DemoModule extends AbstractModule {
 
 #### <font size=5 color=green><b>配置 Configuration</b></font> ####
 
-Guice map 通过 Guice 的模块以及 Just-In-Time bindings 来配置。Guice 模块是向 Guice map 中添加内容的配置逻辑单元。可以通过两种途径进行配置：
+Guice map 通过 `Guice` 的模块以及 Just-In-Time bindings 来配置。模块 `Module` 是向 Guice map 中添加内容的配置逻辑单元。可以通过两种途径进行配置：
 
 - 添加方法注解，例如 `@Provides`
 - 使用 Guice 的 DSL（Domain Specific Language）

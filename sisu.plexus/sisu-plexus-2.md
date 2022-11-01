@@ -674,7 +674,7 @@ setLookupRealm( containerRealm );
     beanModules.add( new PlexusAnnotatedBeanModule( space, variables, global ) );
 ```
 
-类空间 ClassSpace 来自于 sisu.inject 的定义，URLClassSpace 实现 ClassSpace 接口，它们都定义于 org.eclipse.sisu.space 包。beanModules 的类型为 List\<PlexusBeanModule\>，是 sisu.plexus 容器管理 PlexusBeanModule 的链表数据结构，PlexusXmlBeanModule 和 PlexusAnnotatedBeanModule 都是 PlexusBeanModule 的具体实现。
+类空间 ClassSpace 来自于 sisu.inject 的定义，URLClassSpace 实现 ClassSpace 接口，它们都定义于 org.eclipse.sisu.space 包。beanModules 的类型为 `List<PlexusBeanModule>`，是 sisu.plexus 容器管理 PlexusBeanModule 的链表数据结构，PlexusXmlBeanModule 和 PlexusAnnotatedBeanModule 都是 PlexusBeanModule 的具体实现。
 
 
 代码分析继续：
@@ -704,13 +704,12 @@ addPlexusInjector( beanModules, new BootModule( customModules ) );
 
 ```java
     private final Module containerModule = new ContainerModule();
-
     private final Module defaultsModule = new DefaultsModule();
 ```
 
-ContainerModule 和 DefaultsModule 都来自 DefaultPlexusContainer 内部类定义。PlexusBindingModule 是 guice 的 Module 实现，支持 plexus bean 的注册、注入、以及管理。
+ContainerModule 和 DefaultsModule 都来自 DefaultPlexusContainer 内部类定义。PlexusBindingModule 是 guice 的 Module 实现，支持 plexus bean 的注册、注入、及管理。
 
-代码最后调用 Guice 框架的静态入口方法 **Guice.createInjector(Module... modules)** 完成 sisu.plexus 容器的初始化工作。
+`addPlexusInjector()` 方法的实现，完全是 Guice 容器的标准启动方式。配置模块 Module 是 Guice 的基本配置单元，准备各种 Guice 配置模块 Module，组成 `List<Module>` 集合，然后将链表集合包装成 sisu.inject 的 `WireModule` 模块或 `MergedModule` 模块，最后将经过包装的 `WireModule` 或 `MergedModule` 模块传递给 Guice 框架的静态方法 **Guice.createInjector(Module... modules)** 创建 Injector 对象，完成 sisu.plexus 容器的初始化工作。但没有将返回的 Injector 对象保留起来。
 
 
 

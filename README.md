@@ -22,7 +22,7 @@ wagon 是另一个 maven 维护的开源项目，用于 maven 及其子项目中
 <br/><br/>
 
 作者：[devalone](devalone@126.com)
-<br/>
+<br/><br/>
 
 文集位置：https://github.com/dearall/maven-container.git
 

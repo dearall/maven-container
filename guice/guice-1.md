@@ -8,11 +8,11 @@
 ## 1.1 Google Guice 概述 Overview ##
 
 
-Guice 是 Google 开发的一个轻量级的，基于 Java5 泛型和注解特性的依赖注入（dependency injection，DI ）框架。Guice 非常小巧且运行速度快，性能和运行效率优于 Spring，有人说 guice 比 spring 快十倍左右。
+Guice 是 Google 开发的一个轻量级的，基于 Java5 泛型和注解特性的依赖注入（dependency injection，DI ）框架。Guice 非常小巧且运行速度快，性能和运行效率优于 Spring，有人说 guice 比 spring 快十倍左右。使用 spring 很容易写成 service locator 的风格，而用 guice，会很自然的形成 DI 风格。
 
 &emsp;&emsp;Guice 是类型安全的，它能够对构造函数，属性，方法（包含任意个参数的任意方法，而不仅仅是 setter 方法）进行注入。Java 5 引入泛型和注解特性之后，Guice 采用泛型加注解的方式对托管对象进行配置。
 
-&emsp;&emsp;Guice 提供模块对应的抽象 Module，将类与类之间的关系隔离到 Module 中，使得架构和设计的模块概念产物与代码中的 module 类一一对应，更加便利的组织和梳理模块依赖关系，利于整体应用内部的依赖关系维护，而其他 IOC 框架是没有对应物的。此外，借助 privateModule 的功能，可以实现模块接口的明确导出和实现封装，使得支持多数据源这类需求实现起来异常简单。
+&emsp;&emsp;Guice 提供模块对应的抽象 `Module` 接口，将类与类之间的关系隔离到 `Module` 中，使得架构和设计的模块概念产物与代码中的 module 类一一对应，更加便利的组织和梳理模块依赖关系，利于整体应用内部的依赖关系维护，而其他 IOC 框架是没有对应物的。此外，借助 privateModule 的功能，可以实现模块接口的明确导出和实现封装，使得支持多数据源这类需求实现起来异常简单。
 
 &emsp;&emsp;简单来说，Guice 减轻 Java 代码中使用对象工厂和 new 关键字创建对象。可以把 Guice 的 @Inject 注解视为 Java 原生语法的 new 关键字。在某些情况下可能仍需要编写对象工厂代码，但应用代码不直接依赖它们，这使得应用代码更容易修改、单元测试、和在其他环境中的重用。
 
@@ -135,9 +135,9 @@ class DemoModule extends AbstractModule {
 }
 ```
 
-DemoModule 类使用 @Provides 方法指定依赖。
+DemoModule 类使用 @Provides 对方法加注解的方式指定依赖。
 
-在实际的应用程序中，对象的依赖图会更加复杂，而 Guice 通过自动创建全部传递性依赖，来是创建复杂对象变得容易。
+在实际的应用程序中，对象的依赖图会更加复杂，而 Guice 通过自动创建所有传递性依赖，来使创建复杂对象变得容易。
 
 
 <br/><br/>

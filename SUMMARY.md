@@ -72,7 +72,22 @@
   * [2.2 使用 Guice](guice/guice-2.md#2)
   * [2.3 依赖构成一个有向图 Dependencies form a graph](guice/guice-2.md#3)
 * [第3章 Guice 的生命范围 Scope](guice/guice-3.md)
-  * [3.1 内置的 scope（Built-in scopes）](guice/guice-3.md#1)
+  * [3.1 Guice 内置的 scope（Built-in scopes）](guice/guice-3.md#1)
+  * [3.2 应用 Scope（Applying Scope）](guice/guice-3.md#2)
+  * [3.3 渴望型单例 Eager Singleton](guice/guice-3.md#3)
+  * [3.4 scope 的选择](guice/guice-3.md#4)
+  * [3.5 scope 与并发性](guice/guice-3.md#5)
+  * [3.6 在测试中使用 NO_SCOPE](guice/guice-3.md#6)
+* [第4章 Guice 的绑定 Bindings](guice/guice-4.md)
+  * [4.1 链式绑定 Linked Binding](guice/guice-4.md#1)
+  * [4.2 绑定注解 Binding Annotations](guice/guice-4.md#2)
+  * [4.3 实例绑定 Instance Bindings](guice/guice-4.md#3)
+  * [4.4 使用 @Provides 注解方法](guice/guice-4.md#4)
+  * [4.5 使用 Provider 绑定](guice/guice-4.md#5)
+  * [4.6 无目标绑定 Untargeted Binding](guice/guice-4.md#6)
+  * [4.7 构造器绑定 Constructor Binding](guice/guice-4.md#7)
+  * [4.8 内置的绑定 Built-in Binding](guice/guice-4.md#8)
+  * [4.9 Just-in-time Binding](guice/guice-4.md#9)
 
 
 
