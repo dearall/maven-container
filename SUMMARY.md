@@ -88,6 +88,23 @@
   * [4.7 构造器绑定 Constructor Binding](guice/guice-4.md#7)
   * [4.8 内置的绑定 Built-in Binding](guice/guice-4.md#8)
   * [4.9 Just-in-time Binding](guice/guice-4.md#9)
+  * [4.10 多绑定 Multibindings](guice/guice-4.md#10)
+    * [4.10.1 多绑定 Multibinding](guice/guice-4.md#101)
+    * [4.10.2 多绑定 MapBinder 类](guice/guice-4.md#102)
+    * [4.10.3 多绑定 OptionalBinder 类](guice/guice-4.md#103)
+    * [4.10.4 使用 @Provides-like 方法](guice/guice-4.md#104)
+    * [4.10.5 限制](guice/guice-4.md#105)
+    * [4.10.6 观察多绑定内部信息 Inspecting Multibindings](guice/guice-4.md#106)
+  * [第5章 限制绑定源 Restricting the Binding Source](guice/guice-5.md)
+  * [第6章 注入 Injections](guice/guice-6.md)
+    * [6.1 构造器注入 Constructor Injection](guice/guice-6.md#1)
+    * [6.2 方法注入 Method Injection](guice/guice-6.md#2)
+    * [6.3 字段注入 Field Injection](guice/guice-6.md#3)
+    * [6.4 可选注入 Optional Injections](guice/guice-6.md#4)
+    * [6.5 按需注入 On-demand Injection](guice/guice-6.md#5)
+    * [6.6 静态注入 Static Injections](guice/guice-6.md#6)
+    * [6.7 自动注入 Automatic  Injections](guice/guice-6.md#7)
+    * [6.8 注入点 Injection Points](guice/guice-6.md#8)
 
 
 
