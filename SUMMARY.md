@@ -105,6 +105,20 @@
     * [6.6 静态注入 Static Injections](guice/guice-6.md#6)
     * [6.7 自动注入 Automatic  Injections](guice/guice-6.md#7)
     * [6.8 注入点 Injection Points](guice/guice-6.md#8)
+  * [第7章 注入 Provider](guice/guice-7.md)
+    * [7.1 多实例提供者 provider](guice/guice-7.md#1)
+    * [7.2 延迟加载的 provider](guice/guice-7.md#2)
+    * [7.3 混合 scope 的 provider](guice/guice-7.md#3)
+  * [第8章 Aspect Oriented Programming, AOP](guice/guice-8.md)
+    * [8.1 实例：拒绝在周末进行方法调用](guice/guice-8.md#1)
+    * [8.2 约束](guice/guice-8.md#2)
+    * [8.3 注入拦截器 Injecting Interceptors](guice/guice-8.md#3)
+    * [8.4 AOP 联盟 AOP Alliance](guice/guice-8.md#4)
+  * [第9章 与 JSR-330 集成 JSR-330 Integration](guice/guice-9.md)
+  * [第10章 扩展 Guice](guice/guice-10.md)
+  * [第11章 自定义 Scope](guice/guice-11.md)
+  * [第12章 自定义注入](guice/guice-12.md)
+    * [12.1 示例：注入一个 Log4J Logger](guice/guice-12.md#1)
 
 
 

@@ -68,7 +68,7 @@ public class BillingModule extends AbstractModule {
 
 ## 4.2 绑定注解 Binding Annotations ##
 
-偶尔，可能想要对同一类型进行多个绑定。例如，可能同时想要 PayPal 信用卡处理器和 Google Checkout 处理器。绑定支持一个可选的绑定注解（binding annotation）用于解决这个问题。注解和类型一起唯一地标识了一个绑定，这样的一对信息称为一个**键（key）**。
+有的时候，可能想要对同一类型进行多个绑定。例如，可能同时想要 PayPal 信用卡处理器和 Google Checkout 处理器。绑定支持一个可选的绑定注解（binding annotation）用于解决这个问题。注解和类型一起唯一地标识了一个绑定，这样的一对信息称为一个**键（key）**。
 
 
 <br/><br/>
@@ -107,7 +107,7 @@ public @interface GoogleCheckout {}
 
 其中：
 
-- `@Qualifier` 是 JSR-330 规范定义的元注解（meta-annotation），由 [javax.inject](http://javax-inject.github.io/javax-inject/) 项目维护，它告诉 Guice 这是一个绑定注解。如果有多个绑定注解应用到同一个类成员上，Guice 会产生一个错误。Guice 的 `@BindingAnnotation` 在旧代码中也用于同一个目的。
+- `@Qualifier` 是 JSR-330 规范定义的元注解（meta-annotation），由 [javax.inject](http://javax-inject.github.io/javax-inject/) 项目维护，它告诉 Guice 这是一个绑定注解。如果有多个绑定注解应用到同一个类成员上，Guice 会产生错误。Guice 的 `@BindingAnnotation` 在旧代码中也用于同一个目的。
 - `@Target({FIELD, PARAMETER, METHOD})` 元注解防止 @PayPal 注解不小心被应用到没有目标的地方。
 - `@Retention(RUNTIME)` 使注解在运行时可用，这是 Guice 所要求的。
 

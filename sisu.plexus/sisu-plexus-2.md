@@ -712,4 +712,35 @@ ContainerModule 和 DefaultsModule 都来自 DefaultPlexusContainer 内部类定
 `addPlexusInjector()` 方法的实现，完全是 Guice 容器的标准启动方式。配置模块 Module 是 Guice 的基本配置单元，准备各种 Guice 配置模块 Module，组成 `List<Module>` 集合，然后将链表集合包装成 sisu.inject 的 `WireModule` 模块或 `MergedModule` 模块，最后将经过包装的 `WireModule` 或 `MergedModule` 模块传递给 Guice 框架的静态方法 **Guice.createInjector(Module... modules)** 创建 Injector 对象，完成 sisu.plexus 容器的初始化工作。但没有将返回的 Injector 对象保留起来。
 
 
+<br/><br/>
+
+#### <font size=4 color=green><b>DefaultPlexusContainer 静态字段定义</b></font> ####
+
+```java
+    static
+    {
+        System.setProperty( "guice.disable.misplaced.annotation.check", "true" );
+    }
+
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    private static final String DEFAULT_REALM_NAME = "plexus.core";
+
+    private static final Module[] NO_CUSTOM_MODULES = {};
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 

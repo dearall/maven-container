@@ -1,6 +1,6 @@
 ## 第1章 org.eclipse.sisu.plexus 项目 ##
 
-sisu.plexus 是在 sisu.inject 和 Google 的 guice 基础上对 Plexus container 容器的重新实现。并且直接对原始的 Plexus 容器接口进行重新定义。因为 sisu.inject 项目的原因，基于 sisu.inject 重新实现的容器具有类路径扫描（classpath scanning）、自动绑定（auto-binding）、以及动态自动装配（dynamic auto-wiring）特性。因此传统的使用 Plexus container 容器的项目可以像之前一样使用，无需改变任何代码，如下所示：
+sisu.plexus 是在 sisu.inject 和 Google 的 guice 基础上对 Plexus container 容器的重新实现。并且直接对原始的 Plexus 容器接口进行重新定义。因为 sisu.inject 项目的原因，基于 sisu.inject 重新实现的具有类路径扫描（classpath scanning）、自动绑定（auto-binding）、以及动态自动装配（dynamic auto-wiring）特性的容器。因此传统的使用 Plexus container 容器的项目可以像之前一样使用，无需改变任何代码，如下所示：
 
 ```java
 
