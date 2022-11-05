@@ -881,7 +881,7 @@ public class DefaultComponentDiscoverer
 
 ClassWorld 来自于 Plexus 项目的另一个子项目 plexus-classworlds，详细信息参考第四章的论述。
 
-classWorld 字段是容器的领域类加载器 ClassRealm 的管理器，它管理容器中所有的领域类加载器，包括构造 DefaultPlexusContainer 时，创建了以 DEFAULT_REALM_NAME 为 id，Thread.currentThread().getContextClassLoader() 为基本类加载器的领域类加载器，并把该实例作为容器的领域类加载器 containerRealm 的值。也把它存储到线程本地变量 ThreadLocal<ClassRealm> lookupRealm 中。
+classWorld 字段是容器的领域类加载器 ClassRealm 的管理器，它管理容器中所有的领域类加载器，包括构造 DefaultPlexusContainer 时，创建了以 DEFAULT_REALM_NAME 为 id，Thread.currentThread().getContextClassLoader() 为基本类加载器的领域类加载器，并把该实例作为容器的领域类加载器 containerRealm 的值。也把它存储到线程本地变量 `ThreadLocal<ClassRealm> lookupRealm` 中。
 
 
 
@@ -1189,11 +1189,11 @@ public class InitializeUserConfigurationSourcePhase
 - **void addComponent(Object component, String role)**：使用常量 PLEXUS_DEFAULT_HINT 作为 roleHint 调用第一个方法，PLEXUS_DEFAULT_HINT 值为 "default"。
 <br />
 
-- **<T> void addComponent(T component, Class<?> role, String roleHint)**：通过 role.getName() 获取角色字符串，调用第一个方法。
+- **<T> void addComponent(T component, Class\<?\> role, String roleHint)**：通过 role.getName() 获取角色字符串，调用第一个方法。
 
 <br />
 
-- **void addComponentDescriptor(ComponentDescriptor<?> componentDescriptor)**：将组件描述符加入到容器组件注册中心管理。
+- **void addComponentDescriptor(ComponentDescriptor\<?\> componentDescriptor)**：将组件描述符加入到容器组件注册中心管理。
   componentDescriptor：为组件描述符对象，如果该描述符内的领域类加载器 ClassRealm 为 null，则将容器的领域类加载器 containerRealm 设置为该组件描述符的领域类加载器。
   
 
@@ -1204,7 +1204,7 @@ public class InitializeUserConfigurationSourcePhase
 
 通过 Lookup() 系列方法获取组件实例：
 
-Lookup() 系列方法，通过组件注册中心，通过给定的角色 role 以及角色提示 roleHint 的值，首先查找非托管组件集合，即由 addComponent() 方法添加到容器中的非托管组件集合，如果找到直接返回。如果在非托管组件集合中没有找到对应的组件，下一步则找到或创建组件管理器 `ComponentManager<T>`。根据组件的配置不同，确定其是单例组件还是非单例组件，得到不同的组件管理器实现：SingletonComponentManager 或 PerLookupComponentManager 实例。如果组件描述文件中没有为 `<instantiation-strategy>` 元素指定值，使用默认的 DEFAULT_INSTANTIATION_STRATEGY 值为 "singleton"。该元素可以指定为 "per-lookup", "singleton", "keep-alive" 或者 "poolable"。由具体的组件管理器返回或者创建组件实例。如果组件实例还没有创建，则使用 AbstractComponentManager 中的 `ComponentBuilder<T> builder = new XBeanComponentBuilder<T>(this)` 实例，通过 `XBeanComponentBuilder.build(ComponentDescriptor<T> descriptor, ClassRealm realm, ComponentBuildListener listener)` 方法，由 `JavaComponentFactory.newInstance( ComponentDescriptor componentDescriptor, ClassRealm classRealm, PlexusContainer container )` 方法创建。该方法在内部通过调用 `Object instance = implementationClass.newInstance()` 创建组件对象，最后返回给 lookup() 的调用者。
+Lookup() 系列方法，通过组件注册中心，通过给定的角色 role 以及角色标识 roleHint 的值，首先查找非托管组件集合，即由 addComponent() 方法添加到容器中的非托管组件集合，如果找到直接返回。如果在非托管组件集合中没有找到对应的组件，下一步则找到或创建组件管理器 `ComponentManager<T>`。根据组件的配置不同，确定其是单例组件还是非单例组件，得到不同的组件管理器实现：SingletonComponentManager 或 PerLookupComponentManager 实例。如果组件描述文件中没有为 `<instantiation-strategy>` 元素指定值，使用默认的 DEFAULT_INSTANTIATION_STRATEGY 值为 "singleton"。该元素可以指定为 "per-lookup", "singleton", "keep-alive" 或者 "poolable"。由具体的组件管理器返回或者创建组件实例。如果组件实例还没有创建，则使用 AbstractComponentManager 中的 `ComponentBuilder<T> builder = new XBeanComponentBuilder<T>(this)` 实例，通过 `XBeanComponentBuilder.build(ComponentDescriptor<T> descriptor, ClassRealm realm, ComponentBuildListener listener)` 方法，由 `JavaComponentFactory.newInstance( ComponentDescriptor componentDescriptor, ClassRealm classRealm, PlexusContainer container )` 方法创建。该方法在内部通过调用 `Object instance = implementationClass.newInstance()` 创建组件对象，最后返回给 lookup() 的调用者。
 
 - **Object 	lookup(String role)**：
   role ：为组件角色，一般使用该组件接口或基类的全限定类名
@@ -1385,6 +1385,8 @@ public interface ComponentDiscoveryListener
 
 - **List\<ComponentDescriptor\<?\>\> discoverComponents( ClassRealm childRealm )**：使用给定的 ClassRealm 发现为容器配置的组件，即通过 META-INF/plexus/components.xml 文件配置的组件。
   childRealm：是加载组件实现类的领域类加载器 ClassRealm，Plexus 容器默认使用容器的 containerRealm 加载发现的组件
+
+<br/>
 
 - **List\<ComponentDescriptor\<?\>\> discoverComponents( ClassRealm realm, Object data )**：使用给定的 ClassRealm 发现为容器配置的组件，即通过 META-INF/plexus/components.xml 文件配置的组件。
   childRealm：是加载组件实现类的领域类加载器 ClassRealm，Plexus 容器默认使用容器的 containerRealm 加载发现的组件

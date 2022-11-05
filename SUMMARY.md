@@ -44,16 +44,19 @@
   * [2.1 sisu.plexus 的 PlexusContainer 接口](sisu.plexus/sisu-plexus-2.md#1)
   * [2.2 sisu.plexus 的 MutablePlexusContainer 接口](sisu.plexus/sisu-plexus-2.md#2)
   * [2.3 sisu.plexus 提供的 Plexus 容器的默认实现 DefaultPlexusContainer 类](sisu.plexus/sisu-plexus-2.md#3)
+    * [2.3.1 DefaultPlexusContainer 的核心组件](sisu.plexus/sisu-plexus-2.md#31)
+    * [2.3.2 DefaultPlexusContainer 公共方法阐释](sisu.plexus/sisu-plexus-2.md#32)
 * [第3章 sisu.plexus 容器配置接口及其默认实现](sisu.plexus/sisu-plexus-3.md)
   * [3.1 ContainerConfiguration 接口](sisu.plexus/sisu-plexus-3.md#1)
   * [3.2 ContainerConfiguration 的默认实现 DefaultContainerConfiguration 类](sisu.plexus/sisu-plexus-3.md#2)
 
-
-
-
-
 ## 第四部分 sisu.inject
-
+* [第1章 Sisu 项目](sisu.inject/sisu-1.md)
+  * [1.1 sisu 能做什么](sisu.inject/sisu-1.md#1)
+  * [1.2 sisu 如何工作](sisu.inject/sisu-1.md#2)
+* [第2章 WireModule](sisu.inject/sisu-2.md)
+* [第3章 SpaceModule](sisu.inject/sisu-3.md)
+* [第4章 BeanLocator](sisu.inject/sisu-4.md)
 
 
 

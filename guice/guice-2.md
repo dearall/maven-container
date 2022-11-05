@@ -1,8 +1,8 @@
 ## 第2章 Guice 的内部模型 Mental Model ##
 
-学习有关 `key`，`Provider`的概念，以及 Guice 怎么只是一个 map 结构。
+学习有关 `key`，`Provider`的概念，以及 Guice 如何仅仅是一个 map 结构。
 
-在阅读关于 Guice 文章时，会经常看到很多时髦用语："控制反转（Inversion of control）"、"好莱坞原则（Hollywood principle）"、"注入（injection）"，这些听起来令人困惑。但在依赖注入术语里面，这些概念不是很复杂。实际上，我们可能已经编写了非常类似的代码。本文通过一个简化的 Guice 实现模型，以使其更易于理解 Guice 是如何工作的。
+在阅读关于 Guice 文章时，会经常看到很多时髦用语："控制反转（Inversion of control）"、"好莱坞原则（Hollywood principle）"、"注入（injection）"，这些听起来令人困惑的词语。但在依赖注入术语里面，这些概念不是很复杂。实际上，我们可能已经编写了非常类似的代码。本文通过一个简化的 Guice 实现模型，以使其更易于理解 Guice 是如何工作的。
 
 
 <br/><br/>
@@ -10,14 +10,14 @@
 
 ## 2.1 Guice 是一个 map ##
 
-从根本上说，Guice 帮助创建和获取对象以为应用来使用。应用程序所需的对象称为**依赖（dependencies）**。
+从根本上说，Guice 帮助创建和获取对象来提供给应用程序使用。应用程序所需的对象称为**依赖（dependencies）**。
 
-可以把 Guice 理解为一个 map[^guice-map] 结构。应用程序代码声明所需的依赖，而 Guice 为应用从它的 map 中获取依赖对象。"Guice map" 中的每一个条目（entry）由两部分构成：
+可以把 Guice 理解为一个 map[guice-map] 结构。应用程序代码声明所需的依赖，而 Guice 为应用从它的 map 中获取依赖对象。"Guice map" 中的每一个条目（entry）由两部分构成：
 
-- **Guice key** ：map 中第一个 key，用于从 map 中获取特定的值。
-- **Provider** ：map 中第一个值 value，用于为应用创建对象。
+- **Guice key** ：map 中的一个 key，用于从 map 中获取特定的值。
+- **Provider** ：map 中的一个值 value，用于为应用创建对象。
 
-[^guice-map]：Guice 的实际实现要更加复杂得多，map 结构可以大致描述 Guice 的行为。
+[guice-map]：Guice 的实际实现要更加复杂得多，map 结构可以大致描述 Guice 的行为。
 
 
 <br/><br/>
@@ -29,7 +29,7 @@ Guice 使用 `com.google.inject.Key<T>` 类来标识一个依赖，它能被使�
 -  `@Message String` --> `Key<String>` 
 -  `@Count int` --> `Key<Integer>`
 
-一个 Key 最简单的形式表示为 Java 指定的一个类型：
+一个 Key 最简单的形式表示为 Java 的一个具体类型：
 
 ```java
 // Identifies a dependency that is an instance of String.
@@ -103,7 +103,7 @@ interface Provider<T> {
 }
 ```
 
-每个实现 Provider 的类只用很少的代码来提供 T 的实例。可以调用 new T()，或者其它构造 T 实例的方式，或者从一个缓存中返回一个建立好实例。
+每个实现 Provider 的类只用很少的代码来提供 T 的实例。可以调用 new T()，或者其它构造 T 实例的方式，或者从一个缓存中返回一个建立好的实例。
 
 多数应用程序并不是直接实现 `Provider` 接口，而是使用 `Module` 来配置 Guice 注入器 injector，而 Guice 注入器在内部为所有它知道如何创建的对象创建 `Provider`。
 
@@ -201,7 +201,7 @@ Guice map 通过 `Guice` 的模块以及 Just-In-Time bindings 来配置。模�
 
 不是从 map 中拉出什么东西，而是声明（declare）需要它们，这是依赖注入的本质。如果需要什么东西，不要到别处获取它，或者请求某个类来返回想要的东西。而是简单的声明没有它就无法工作，并依赖 Guice 提供想要的对象。
 
-这种模型来自于大多数人们关于代码的思考：更具声明性的模型而非命令式的模型。这也就是为什么依赖注入经常被描述为一类控制反转（inversion of control, IoC）。
+这种模型来自于大多数人们关于代码的思考：更具声明性的模型而非命令式的模型。这也就是为什么依赖注入经常被描述为一类控制反转（inversion of control, IoC）的原因。
 
 
 有几种方法可以声明需要某些东西：
@@ -239,7 +239,7 @@ Database provideDatabase(
 
 ## 2.3 依赖构成一个有向图 Dependencies form a graph ##
 
-当注入某个东西，它自己也有依赖，Guice 递归注入这些依赖。想象一下，为了注入一个 Foo 类的实例，Guice 创建 Provider 实现，与如下类似：
+当注入某个东西，它自己也有依赖，Guice 递归注入这些依赖。想象一下，为了注入一个 Foo 类的实例，Guice 创建 Provider 实现，与如下代码类似：
 
 ```java
 class FooProvider implements Provider<Foo> {
