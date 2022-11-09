@@ -29,6 +29,10 @@
         * [4.2.2 component-discoverer-manager 元素](plexus/plexus-4.md#22)
         * [4.2.3 listener 元素](plexus/plexus-4.md#23)
         * [4.2.4 component-discoverer 元素](plexus/plexus-4.md#24)
+* [第5章 为什么使用组件 Why use components](plexus/plexus-5.md)
+  * [5.1 组件是什么 What are Components?](plexus/plexus-5.md#1)
+* [第6章 Plexus 组件描述符 Plexus Component Descriptor](plexus/plexus-6.md)
+* [第7章 Plexus 自动组件配置 Auto Configuration](plexus/plexus-7.md)
 
 ## 第二部分 Classworld 项目
 * [第1章 Plexus Classworld 项目](classworld/classworld-1.md)

@@ -645,6 +645,24 @@ scanning 的类型为 BeanScanning，来自于 sisu.inject 项目的 org.eclipse
 
 **scanning = parseScanningOption( configuration.getClassPathScanning() )** 调用将容器配置选项中取出的类路径扫描字符串 configuration.getClassPathScanning()，转换为可用的 BeanScanning 类型，存储在变量 scanning 中。如果没有找到匹配的扫描方式，scanning 设置为 BeanScanning.OFF 值。
 
+BeanScanning parseScanningOption( final String scanning ) 代码如下：
+
+```java
+    private static BeanScanning parseScanningOption( final String scanning )
+    {
+        for ( final BeanScanning option : BeanScanning.values() )
+        {
+            if ( option.name().equalsIgnoreCase( scanning ) )
+            {
+                return option;
+            }
+        }
+        return BeanScanning.OFF;
+    }
+```
+
+从代码可以看出，是通过 BeanScanning 枚举的字符串表示进行解析的，因此可输入的有效字符串应与 BeanScanning 枚举值对应，即 **"ON", "OFF", "CACHE", "INDEX", "GLOBAL_INDEX"**，字符串不区分大小写，如果提供的字符串无法识别，被作为 **OFF** 处理。
+
 代码分析继续：
 
 ```java
@@ -676,7 +694,7 @@ setLookupRealm( containerRealm );
     beanModules.add( new PlexusAnnotatedBeanModule( space, variables, global ) );
 ```
 
-类空间 ClassSpace 来自于 sisu.inject 的定义，URLClassSpace 实现 ClassSpace 接口，它们都定义于 org.eclipse.sisu.space 包。beanModules 的类型为 `List<PlexusBeanModule>`，是 sisu.plexus 容器管理 PlexusBeanModule 的链表数据结构，PlexusXmlBeanModule 和 PlexusAnnotatedBeanModule 都是 PlexusBeanModule 的具体实现。其中 PlexusXmlBeanModule 在它的 configure() 方法中调用了 PlexusXmlScanner 的 scan() 方法，而 **PlexusXmlScanner.scan( final ClassSpace space, final boolean root )** 方法正是执行扫描和解析 **"META-INF/plexus/components.xml"** 配置文件的工作。这个文件是传统 Plexus 容器标准的组件配置文件。而 PlexusAnnotatedBeanModule 内部使用 SpaceModule 针对给定的 `URLClassSpace( containerRealm )` 执行类路径扫描，自动绑定由 `@Qualifier` 注解的注解标注的，或者由 `@Named` 注解的类型。
+类空间 ClassSpace 来自于 sisu.inject 的定义，URLClassSpace 实现 ClassSpace 接口，它们都定义于 org.eclipse.sisu.space 包。beanModules 的类型为 `List<PlexusBeanModule>`，是 sisu.plexus 容器管理 PlexusBeanModule 的列表数据结构，PlexusXmlBeanModule 和 PlexusAnnotatedBeanModule 都是 PlexusBeanModule 的具体实现。其中 PlexusXmlBeanModule 在它的 configure() 方法中调用了 PlexusXmlScanner 的 scan() 方法，而 **PlexusXmlScanner.scan( final ClassSpace space, final boolean root )** 方法正是执行扫描和解析 **"META-INF/plexus/components.xml"** 配置文件的工作。这个文件是传统 Plexus 容器标准的组件配置文件。而 PlexusAnnotatedBeanModule 内部使用 SpaceModule 针对给定的 `URLClassSpace( containerRealm )` 执行类路径扫描，自动绑定由 `@Qualifier` 注解的注解标注的，或者由 `@Named` 注解的类型。
 
 这样，**sisu.plexus 容器同时支持 "META-INF/plexus/components.xml" 配置组件和类路径扫描配置组件**。
 
@@ -713,9 +731,9 @@ addPlexusInjector( beanModules, new BootModule( customModules ) );
 
 ContainerModule 和 DefaultsModule 都来自 DefaultPlexusContainer 内部类定义。PlexusBindingModule 是 guice 的 Module 实现，支持 plexus bean 的注册、注入、及管理。PlexusBindingModule 配置了 PlexusBeanModule 接口，PlexusXmlBeanModule 实现了 PlexusBeanModule 接口，它的功能就是通过扫描 XML 资源绑定 Plexus 组件。
 
-`addPlexusInjector()` 方法的实现，完全是 Guice 容器的标准启动方式。配置模块 Module 是 Guice 的基本配置单元，准备各种 Guice 配置模块 Module，组成 `List<Module>` 集合，然后将链表集合包装成 sisu.inject 的 `WireModule` 模块或 `MergedModule` 模块，最后将经过包装的 `WireModule` 或 `MergedModule` 模块传递给 Guice 框架的静态方法 **Guice.createInjector(Module... modules)** 创建 Injector 对象，完成 sisu.plexus 容器的初始化工作。但没有将返回的 Injector 对象保留起来。
+`addPlexusInjector()` 方法的实现，完全是 Guice 容器的标准启动方式。配置模块 Module 是 Guice 的基本配置单元，准备各种 Guice 配置模块 Module，组成 `List<Module>` 集合，然后将列表集合包装成 sisu.inject 的 `WireModule` 模块或 `MergedModule` 模块，最后将经过包装的 `WireModule` 或 `MergedModule` 模块传递给 Guice 框架的静态方法 **Guice.createInjector(Module... modules)** 创建 Injector 对象，完成 sisu.plexus 容器的初始化工作。但没有将返回的 Injector 对象保留起来。
 
-其中 WireModule 的特性是能自动解决缺失的依赖，MergedModule 的特性是能去掉重复或断开的绑定（即缺失依赖的绑定）。如果配置容器的 isAutoWiringEnabled 为 true 值，那么 **sisu.plexus 容器同时支持 "META-INF/plexus/components.xml" 配置组件和类路径扫描配置组件，还支持缺失依赖的自动连接特性**。后面两个特性正是 sisu.inject 容器提供的天然支持。
+其中 WireModule 的特性是能自动解决缺失的依赖，MergedModule 的特性是能去掉重复或断开的绑定（即缺失依赖的绑定）。如果配置容器的 isAutoWiringEnabled 为 true 值，那么 **sisu.plexus 容器支持 Plexus 传统的 "META-INF/plexus/components.xml" 配置组件，同时还支持类路径扫描组件，以及自动解决依赖的特性**。后面两个特性正是 sisu.inject 容器提供的天然支持。如果使用 Plexus 传统的 "META-INF/plexus/components.xml" 文件配置组件，甚至可以无需配置组件的依赖，WireModule 会自动解决组件的依赖问题，这是个很酷的特性。唯一要注意的是，要配置容器的 **ContainerConfiguration.setClassPathScanning( final String classPathScanning)** 为非 "off" 值，并确保 **ContainerConfiguration.getAutoWiring()** 返回 true 值。
 
 
 
@@ -970,7 +988,7 @@ final Key<T> key = hints.length == 1 ? Key.get( role, Names.named( hints[0] ) ) 
 
 - **Object 	lookup(String role, String roleHint)**：
   role ：为组件角色，一般使用该组件接口或基类的全限定类名
-  roleHint ：为角色区别标识，当多个类实现同一接口时，使用该字符串识别不同的实现类
+  roleHint ：为角色区别标识，当多个类实现同一接口时，使用该字符串识别不同的实现类。在扫描时，roleHint 会被作为 @Named 注解的 value 值，或者作为被 `@Qualifier` 注解的注解名字进行扫描查找。
 <br />
 
 - **\<T\> T 	lookup(Class\<T\> type)**：
@@ -1180,6 +1198,10 @@ final Key<T> key = hints.length == 1 ? Key.get( role, Names.named( hints[0] ) ) 
 
 注意，实际上该方法返回 null 值，它的返回值并没有在哪个调用中用到。
 
+此方法是 DefaultPlexusContainer 的方法，而不是它的实现接口 PlexusContainer 的方法。上一个 **discoverComponents( ClassRealm childRealm )** 则是接口暴露的方法，通过 NO_CUSTOM_MODULES 调用本方法，即空的 Module[] 数组。
+
+
+
 
 <br/><br/>
 #### <font size=4 color=green><b>释放组件 Releases the component from the container</b></font> ####
@@ -1212,12 +1234,6 @@ final Key<T> key = hints.length == 1 ? Key.get( role, Names.named( hints[0] ) ) 
 
 
 - **ClassRealm getContainerRealm()**：返回容器的领域类加载器 ClassRealm，这个 ClassRealm 被容器用作所有容器包含组件的默认父级领域类加载器。
-
-<br/>
-
-// ----------------------------------------------------------------------------
-// Component/Plugin ClassRealm creation
-// ----------------------------------------------------------------------------
 
 <br/>
 
